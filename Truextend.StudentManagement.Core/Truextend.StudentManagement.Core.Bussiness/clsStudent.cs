@@ -88,7 +88,38 @@ namespace Truextend.StudentManagement.Core.Bussiness
         }
 
         //Method to delete a STUDENT in the DB.
-
+        public bool DeleteStudent(int pId)
+        {
+            bool sw = false;
+            //Open the conexion with DB.
+            SqlConnection conexion = new SqlConnection(ConexionString);
+            conexion.Open();
+            // Instance the  command which calls the stored procedure of the DB.
+            SqlCommand command = new SqlCommand("psDeleteStudent", conexion);
+            command.CommandType = CommandType.StoredProcedure;
+            // Insert the parameters of  the stored procedure.
+            command.Parameters.Add(new SqlParameter()
+            {
+                ParameterName = "@Id",
+                SqlDbType = SqlDbType.Int,
+                Value = pId,
+                Direction = ParameterDirection.Input
+            });
+            try
+            {
+                // Execute query
+                command.ExecuteNonQuery();
+                sw = true;// execute affirmative
+            }
+            catch (Exception e)
+            {
+                sw = false; // error
+            }
+            // Close the conexion.
+            conexion.Close();
+            // return boolean
+            return sw;            
+        }
 
         //Method: search by name, sorted alphabetically
 
