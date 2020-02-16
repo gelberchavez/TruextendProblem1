@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Truextend.StudentManagement.Core.Bussiness;
-
+using System.Data;
 
 namespace ConsoleApp
 {
@@ -17,9 +17,12 @@ namespace ConsoleApp
 
             Console.WriteLine("Start...");
             Console.WriteLine("------------------------------------");
-            Console.WriteLine("Import of records from CSV File ...");
+            Console.WriteLine("...Import of records from CSV File ...");
             //Call to method
             ImportStudentsCSV();
+            //Call to method for list students
+            Console.WriteLine("...Call to method for to get Stundets ...");
+            ListStudents();
             Console.WriteLine("Press any key to exit!!!!!");
             Console.ReadKey();
         }
@@ -67,6 +70,24 @@ namespace ConsoleApp
             int formatSS = Convert.ToInt32(pStringDateFormatCSV.Substring(12, 2));//Second
             ReturnDate = new DateTime(formatYYYY, formatMM, formatDD, formatHH, formatmm, formatSS);
             return ReturnDate;// Returns the required date format
+        }
+
+        //Method for get Students
+        public static void ListStudents()
+        {
+            clsStudent oStudent = new clsStudent();
+            var vDataStudents = oStudent.GetStudentsSortedName();
+
+            Console.WriteLine("-----Students List sorted by name-----");
+            int count = 0;
+            foreach (DataRow datarow in vDataStudents.Rows)
+            {
+                count++;
+                Console.WriteLine("***************** Record " + count + "********************");
+                Console.WriteLine(datarow[0].ToString() + " " + datarow[1].ToString() + " " + datarow[2].ToString() + " " + datarow[3].ToString() + " " + datarow[4].ToString());
+            }
+
+
         }
 
         #endregion

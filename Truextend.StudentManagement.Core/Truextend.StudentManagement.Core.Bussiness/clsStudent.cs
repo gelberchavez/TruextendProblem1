@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Truextend.StudentManagement.Core.Entities;
+using System.Globalization;
 
 namespace Truextend.StudentManagement.Core.Bussiness
 {
@@ -37,7 +38,7 @@ namespace Truextend.StudentManagement.Core.Bussiness
             SqlConnection conexion = new SqlConnection(ConexionString);
             conexion.Open();
             // Instance the  command which calls the stored procedure of the DB.
-            SqlCommand command = new SqlCommand("psAddStudent", conexion);
+            SqlCommand command = new SqlCommand("spAddStudent", conexion);
             command.CommandType = CommandType.StoredProcedure;
             // Insert the parameters of  the stored procedure.
             command.Parameters.Add(new SqlParameter()
@@ -76,7 +77,7 @@ namespace Truextend.StudentManagement.Core.Bussiness
                 sw = true;// execute affirmative
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 sw = false; // error
             }
@@ -95,7 +96,7 @@ namespace Truextend.StudentManagement.Core.Bussiness
             SqlConnection conexion = new SqlConnection(ConexionString);
             conexion.Open();
             // Instance the  command which calls the stored procedure of the DB.
-            SqlCommand command = new SqlCommand("psDeleteStudent", conexion);
+            SqlCommand command = new SqlCommand("spDeleteStudent", conexion);
             command.CommandType = CommandType.StoredProcedure;
             // Insert the parameters of  the stored procedure.
             command.Parameters.Add(new SqlParameter()
@@ -118,17 +119,132 @@ namespace Truextend.StudentManagement.Core.Bussiness
             // Close the conexion.
             conexion.Close();
             // return boolean
-            return sw;            
+            return sw;
         }
 
-        //Method: search by name, sorted alphabetically
+        //Method: Get Student Record by Id
+        public clsStudentBE GetStudentbyId(int pId)
+        {
+            clsStudentBE oStudent = new clsStudentBE();
+            //Open the conexion with DB.
+            SqlConnection conexion = new SqlConnection(ConexionString);
+            conexion.Open();
+            // Instance the  command which calls the stored procedure of the DB.
+            SqlCommand command = new SqlCommand("spGetStudentbyId", conexion);
+            command.CommandType = CommandType.StoredProcedure;
+            // Insert the parameters of  the stored procedure.
+            command.Parameters.Add(new SqlParameter()
+            {
+                ParameterName = "@Id",
+                SqlDbType = SqlDbType.Int,
+                Value = pId,
+                Direction = ParameterDirection.Input
+            });
+            // Execute procedure.
+            var vTable = command.ExecuteReader();
+            if (vTable.HasRows)
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(vTable);
+                oStudent.Id = Convert.ToInt32(dataTable.Rows[0][0]);
+                oStudent.StudentType = dataTable.Rows[0][1].ToString();
+                oStudent.StudentName = dataTable.Rows[0][2].ToString();
+                oStudent.Gender = dataTable.Rows[0][3].ToString();
+                oStudent.DateTimeStamp = Convert.ToDateTime(dataTable.Rows[0][4].ToString());
 
+            }
+            return oStudent;
+        }
+
+        //Method: Get Students sorted alphabetically by name
+        public DataTable GetStudentsSortedName()
+        {
+            DataTable oDataStudents = new DataTable();
+            //Open the conexion with DB.
+            SqlConnection conexion = new SqlConnection(ConexionString);
+            conexion.Open();
+            // Instance the  command which calls the stored procedure of the DB.
+            SqlCommand command = new SqlCommand("spGetStudentSbyName", conexion);
+            command.CommandType = CommandType.StoredProcedure;
+
+            // Execute procedure.
+            var vTable = command.ExecuteReader();
+            if (vTable.HasRows)
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(vTable);
+                oDataStudents = dataTable;
+            }
+
+            return oDataStudents;
+        }
 
         //Method: search by type, sorted  by date,most recent to least recent.
+        public DataTable GetStudentsByType(string pType)
+        {
+            DataTable oDataStudents = new DataTable();
+            //Open the conexion with DB.
+            SqlConnection conexion = new SqlConnection(ConexionString);
+            conexion.Open();
+            // Instance the  command which calls the stored procedure of the DB.
+            SqlCommand command = new SqlCommand("spGetStudentsByType", conexion);
+            command.CommandType = CommandType.StoredProcedure;
+            // Insert the parameters of  the stored procedure.
+            command.Parameters.Add(new SqlParameter()
+            {
+                ParameterName = "@StudentType",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = pType,
+                Direction = ParameterDirection.Input
+            });
+            // Execute procedure.
+            var vTable = command.ExecuteReader();
+            if (vTable.HasRows)
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(vTable);
+                oDataStudents = dataTable;
+            }
 
+            return oDataStudents;
+        }
 
         //Method: search by gender and type, sorted  by date,most recent to least recent.
+        public DataTable GetStudentsByGender_Type(string pGender, string pType)
+        {
+            DataTable oDataStudents = new DataTable();
+            //Open the conexion with DB.
+            SqlConnection conexion = new SqlConnection(ConexionString);
+            conexion.Open();
+            // Instance the  command which calls the stored procedure of the DB.
+            SqlCommand command = new SqlCommand("spGetStudentsByGender_Type", conexion);
+            command.CommandType = CommandType.StoredProcedure;
+            // Insert the parameters of  the stored procedure.
+            command.Parameters.Add(new SqlParameter()
+            {
+                ParameterName = "@Gender",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = pGender,
+                Direction = ParameterDirection.Input
+            });
+            command.Parameters.Add(new SqlParameter()
+            {
+                ParameterName = "@StudentType",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = pType,
+                Direction = ParameterDirection.Input
+            });
+            // Execute procedure.
+            var vTable = command.ExecuteReader();
+            if (vTable.HasRows)
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(vTable);
+                oDataStudents = dataTable;
+            }
 
+            return oDataStudents;
+        }
 
         #endregion
 

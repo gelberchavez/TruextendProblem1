@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{D172F412-4FF4-48CC-BD16-C8320FAE9FAB}"
-	ProjectSection(SolutionItems) = preProject
-		cls.cs = cls.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{D0415869-9823-4DE4-9B69-E932835C5A9A}"
 EndProject
