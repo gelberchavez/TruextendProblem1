@@ -15,7 +15,7 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Start...");
+            Console.WriteLine("Start...");// prueba actualizacion mensaje vs2019
             Console.WriteLine("------------------------------------");
             Console.WriteLine("...Import of records from CSV File ...");
             //Call to method
